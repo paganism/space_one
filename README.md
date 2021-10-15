@@ -1,6 +1,6 @@
 # Startship in the sky
 
-# How to start (python3.7 or higher)
+# How to start
 
 1. Download the code
 2. Go to code directory
