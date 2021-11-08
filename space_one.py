@@ -5,6 +5,7 @@ import random
 from fire_animation import fire
 from curses_tools import draw_frame, read_controls, get_frame_size
 import os
+import itertools
 
 
 TIC_TIMEOUT = 0.1
@@ -42,8 +43,7 @@ async def animate_spaceship(canvas, row, column, frames, max_row, max_column):
 
     frame_rows, frame_cols = get_frame_size(frames[0])
 
-    while True:
-        for frame in frames:
+    for frame in itertools.cycle(frames):
 
             row_dir, col_dir, _ = read_controls(canvas)
 
@@ -66,6 +66,7 @@ async def animate_spaceship(canvas, row, column, frames, max_row, max_column):
 
 def draw(canvas):
     canvas.nodelay(True)
+    curses.curs_set(False)
     rocket_frame_1 = read_file(
         os.path.join(BASE_DIR, 'frames/rocket_frame_1.txt')
     )
@@ -104,18 +105,15 @@ def draw(canvas):
     )
     coroutines.append(spaceship)
     while True:
-
         for coroutine in coroutines.copy():
 
             try:
                 coroutine.send(None)
                 canvas.border()
-
                 canvas.refresh()
-                curses.curs_set(False)
             except StopIteration:
                 coroutines.remove(coroutine)
-        if len(coroutines) == 0:
+        if not coroutines:
             continue
         time.sleep(TIC_TIMEOUT)
 
