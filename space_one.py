@@ -105,12 +105,13 @@ def draw(canvas):
     )
     coroutines.append(spaceship)
     while True:
+        canvas.refresh()
         for coroutine in coroutines.copy():
 
             try:
                 coroutine.send(None)
                 canvas.border()
-                canvas.refresh()
+
             except StopIteration:
                 coroutines.remove(coroutine)
         if not coroutines:
